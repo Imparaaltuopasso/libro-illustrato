@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Libro Illustrato – Impara al tuo passo</title>
+  <meta name="description" content="Crea libri illustrati con drag & drop. Aggiungi immagini, testo e forme. Salva, ristampa in PDF e condividi. 100% gratis.">
+  <meta property="og:title" content="Libro Illustrato – Impara al tuo passo">
+  <meta property="og:description" content="Editor semplice per libri illustrati. Drag & drop, pagine multiple, stampa in PDF.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="./assets/logo.svg">
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <img src="./assets/logo.svg" alt="Logo Impara al tuo passo" />
+      <span>Libro Illustrato</span>
+    </div>
+    <nav class="toolbar" aria-label="Barra strumenti">
+      <button id="newProject" title="Nuovo (svuota)">Nuovo</button>
+      <button id="openProject" title="Apri file .ilp">Apri</button>
+      <input type="file" id="openFile" accept=".ilp,application/json" style="display:none">
+      <button id="saveProject" title="Salva come .ilp">Salva</button>
+      <button id="exportPDF" title="Stampa/Esporta in PDF (usa 'Salva come PDF')">Esporta PDF</button>
+      <span class="divider"></span>
+      <button id="addText">+ Testo</button>
+      <button id="addImage">+ Immagine</button>
+      <input type="file" id="imageInput" accept="image/*" style="display:none">
+      <div class="dropdown">
+        <button class="dropbtn">+ Forma ▾</button>
+        <div class="dropdown-content">
+          <button class="shape" data-shape="rect">Rettangolo</button>
+          <button class="shape" data-shape="circle">Cerchio</button>
+        </div>
+      </div>
+      <span class="divider"></span>
+      <button id="addPage">+ Pagina</button>
+      <button id="duplicatePage">Duplica</button>
+      <button id="deletePage" class="danger">Elimina</button>
+      <button id="prevPage" title="Pagina precedente">◀</button>
+      <button id="nextPage" title="Pagina successiva">▶</button>
+      <span id="pageLabel" class="muted"></span>
+      <span class="divider"></span>
+      <button id="quickGuide">Guida rapida</button>
+    </nav>
+  </header>
+
+  <main>
+    <aside class="sidebar" aria-label="Miniature pagine">
+      <h2>Pagine</h2>
+      <div id="thumbnails" class="thumbs" role="list"></div>
+    </aside>
+
+    <section class="workspace">
+      <div class="canvas-wrap">
+        <div id="canvas" class="canvas" tabindex="0" aria-label="Area di disegno"></div>
+      </div>
+    </section>
+
+    <aside class="inspector" aria-label="Proprietà elemento">
+      <h2>Proprietà</h2>
+      <div id="noSelection" class="muted small">Nessun elemento selezionato</div>
+      <div id="props" class="props" hidden>
+        <label>X <input type="number" id="propX" /></label>
+        <label>Y <input type="number" id="propY" /></label>
+        <label>Larghezza <input type="number" id="propW" /></label>
+        <label>Altezza <input type="number" id="propH" /></label>
+
+        <div id="textProps" hidden>
+          <label>Testo <textarea id="propText" rows="3"></textarea></label>
+          <label>Dimensione <input type="number" id="propFontSize" value="24" /></label>
+          <label>Colore <input type="color" id="propColor" value="#111827" /></label>
+          <label>Allineamento
+            <select id="propAlign">
+              <option value="left">Sinistra</option>
+              <option value="center">Centro</option>
+              <option value="right">Destra</option>
+            </select>
+          </label>
+        </div>
+
+        <div id="shapeProps" hidden>
+          <label>Riempimento <input type="color" id="propFill" value="#FFD166" /></label>
+          <label>Bordo <input type="color" id="propStroke" value="#111827" /></label>
+          <label>Spessore bordo <input type="number" id="propStrokeW" value="2" /></label>
+          <div id="cornerRadiusWrap">
+            <label>Raggio angoli <input type="number" id="propRadius" value="12" /></label>
+          </div>
+        </div>
+
+        <div id="imageProps" hidden>
+          <button id="replaceImage">Sostituisci immagine</button>
+        </div>
+
+        <div class="stacking">
+          <button id="bringFront">Porta avanti</button>
+          <button id="sendBack">Porta dietro</button>
+          <button id="deleteEl" class="danger">Elimina</button>
+        </div>
+      </div>
+
+      <h2>Pagina</h2>
+      <label>Colore sfondo <input type="color" id="pageBg" value="#FFFFFF" /></label>
+      <label>Formato
+        <select id="pageSize">
+          <option value="A4">A4 (210×297mm)</option>
+          <option value="Square">Quadrato (1080×1080)</option>
+          <option value="Instagram">Post IG (1080×1350)</option>
+          <option value="Letter">US Letter (8.5×11")</option>
+        </select>
+      </label>
+    </aside>
+  </main>
+
+  <footer class="footer">
+    <span>© Impara al tuo passo • Progetto: <strong>Libro Illustrato</strong> • <a href="./guida.html" target="_blank">Guida rapida</a></span>
+  </footer>
+
+  <div id="guideModal" class="modal" hidden>
+    <div class="modal-content">
+      <button id="closeGuide" class="close">×</button>
+      <h2>Guida rapida</h2>
+      <ol>
+        <li>Premi <em>+ Pagina</em> per iniziare.</li>
+        <li>Aggiungi <em>Testo</em> o <em>Immagini</em> e trascinali dove vuoi.</li>
+        <li>Modifica dimensioni e colori nella colonna <em>Proprietà</em>.</li>
+        <li>Per salvare, usa <em>Salva</em> e conserva il file <code>.ilp</code>.</li>
+        <li>Per PDF: premi <em>Esporta PDF</em> e scegli <em>Salva come PDF</em> nella finestra di stampa.</li>
+      </ol>
+      <p class="small muted">Suggerimento: crea una pagina master e duplicala per mantenere coerenza.</p>
+      <hr/>
+      <p><strong>Scopri i corsi e le guide:</strong> <a href="#" title="Sostituisci con il tuo link">Link ai miei corsi</a></p>
+    </div>
+  </div>
+
+  <script src="./app.js"></script>
+</body>
+</html>
